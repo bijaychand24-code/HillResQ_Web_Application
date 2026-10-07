@@ -1,0 +1,15 @@
+{
+  "name": "hillresq",
+  "version": "1.0.0",
+  "description": "HillResQ — Report. Respond. Rescue. Full-Stack MERN Disaster Incident Response System for Hilly Regions",
+  "scripts": {
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "seed": "npm run seed --prefix backend",
+    "test": "npm run test --prefix backend",
+    "build": "npm run build --prefix frontend"
+  },
+  "keywords": ["emergency", "disaster", "response", "mern", "incident", "mountain"],
+  "author": "HillResQ Team",
+  "license": "ISC"
+}
