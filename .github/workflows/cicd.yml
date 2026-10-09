@@ -1,0 +1,30 @@
+## Workflow ##
+#Name the workflow
+name: CICD
+
+on: push
+##JOBS##
+  jobs:
+    code:
+    ##STEPS##
+    runs-on: ubuntu-letest
+    steps:
+      - name: Code checkout
+        run: echo "Code Checkout Done"
+    build:
+    runs-on: ubuntu-letest
+      steps:
+       - name: Code Build
+        run: echo "Code Build Done"
+    test:
+     runs-on: ubuntu-letest
+      steps:
+     - name: Code test
+        run: echo "Code Test Done"
+    deploy:
+     runs-on: ubuntu-letest
+      steps:
+     - name: Code Deploy
+        run: echo "Code Deploy Done"
+    
+  
