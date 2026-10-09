@@ -1,30 +1,29 @@
-## Workflow ##
-#Name the workflow#
-name: CICD
+
+name: HillResQ CI/CD
 
 on: push
-##JOBS##
-  jobs:
-    code:
-    ##STEPS##
-    runs-on: ubuntu-letest
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
     steps:
-      - name: Code checkout
+      - name: Code Checkout
         run: echo "Code Checkout Done"
-    build:
-    runs-on: ubuntu-letest
-      steps:
-       - name: Code Build
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Build
         run: echo "Code Build Done"
-    test:
-     runs-on: ubuntu-letest
-      steps:
-     - name: Code test
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Test
         run: echo "Code Test Done"
-    deploy:
-     runs-on: ubuntu-letest
-      steps:
-     - name: Code Deploy
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Deploy
         run: echo "Code Deploy Done"
-    
-  
