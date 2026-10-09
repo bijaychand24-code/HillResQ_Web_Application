@@ -1,5 +1,5 @@
 ## Workflow ##
-#Name the workflow
+#Name the workflow#
 name: CICD
 
 on: push
