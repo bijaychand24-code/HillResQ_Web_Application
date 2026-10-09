@@ -59,8 +59,12 @@ const IncidentMap = ({
 }) => {
   // Calculate bounds if multiple incidents exist
   const validCoordinates = incidents
-    .filter((inc) => inc.latitude && inc.longitude)
-    .map((inc) => [inc.latitude, inc.longitude]);
+    .filter((inc) => {
+      const lat = parseFloat(inc?.latitude);
+      const lng = parseFloat(inc?.longitude);
+      return !isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+    })
+    .map((inc) => [parseFloat(inc.latitude), parseFloat(inc.longitude)]);
 
   return (
     <div style={{ height }} className="w-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm relative z-0">
@@ -84,14 +88,16 @@ const IncidentMap = ({
         />
 
         {incidents.map((incident) => {
-          if (!incident.latitude || !incident.longitude) return null;
+          const lat = parseFloat(incident?.latitude);
+          const lng = parseFloat(incident?.longitude);
+          if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
           const isCritical = incident.severity === 'critical';
           const icon = createSeverityIcon(incident.severity, isCritical);
 
           return (
             <Marker
               key={incident._id}
-              position={[incident.latitude, incident.longitude]}
+              position={[lat, lng]}
               icon={icon}
             >
               <Popup className="incident-popup">

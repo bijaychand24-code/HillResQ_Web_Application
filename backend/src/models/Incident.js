@@ -38,6 +38,11 @@ const incidentSchema = new mongoose.Schema(
       },
       default: 'medium'
     },
+    severityWeight: {
+      type: Number,
+      default: 2,
+      index: true
+    },
     latitude: {
       type: Number,
       required: [true, 'Please provide latitude coordinate'],
@@ -97,9 +102,25 @@ const incidentSchema = new mongoose.Schema(
   }
 );
 
+// Severity weight mapping for numeric priority sorting
+const severityWeights = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1
+};
+
+incidentSchema.pre('save', function (next) {
+  if (this.isModified('severity') || this.severityWeight === undefined) {
+    this.severityWeight = severityWeights[this.severity] || 2;
+  }
+  next();
+});
+
 // Indexes for query performance and filtering
 incidentSchema.index({ status: 1 });
 incidentSchema.index({ severity: 1 });
+incidentSchema.index({ severityWeight: -1, createdAt: -1 });
 incidentSchema.index({ type: 1 });
 incidentSchema.index({ reportedBy: 1 });
 incidentSchema.index({ assignedTo: 1 });

@@ -11,7 +11,7 @@ const notFound = (req, res, next) => {
  * Centralized error handler
  */
 const errorHandler = (err, req, res, next) => {
-  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let statusCode = err.statusCode || (res.statusCode !== 200 ? res.statusCode : 500);
   let message = err.message || 'Internal Server Error';
   let errors = null;
 
@@ -36,7 +36,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Multer file upload errors
-  if (err.name === 'MulterError') {
+  if (err.name === 'MulterError' || (err.message && err.message.includes('Invalid file type'))) {
     statusCode = 400;
     if (err.code === 'LIMIT_FILE_SIZE') {
       message = 'File size limit exceeded (maximum 5MB allowed)';

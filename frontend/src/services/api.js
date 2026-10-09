@@ -29,7 +29,8 @@ api.interceptors.response.use(
         window.location.pathname.startsWith('/dashboard') ||
         window.location.pathname.startsWith('/admin') ||
         window.location.pathname.startsWith('/responder') ||
-        window.location.pathname.startsWith('/report')
+        window.location.pathname.startsWith('/report') ||
+        window.location.pathname.startsWith('/profile')
       ) {
         localStorage.removeItem('hillresq_token');
         localStorage.removeItem('hillresq_user');

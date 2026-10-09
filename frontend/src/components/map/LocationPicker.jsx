@@ -139,6 +139,52 @@ const LocationPicker = ({
         </MapContainer>
       </div>
 
+      {/* Manual Coordinate Entry Inputs */}
+      <div className="grid grid-cols-2 gap-3 pt-1">
+        <div>
+          <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+            Latitude (-90 to 90)
+          </label>
+          <input
+            type="number"
+            step="any"
+            min="-90"
+            max="90"
+            value={latitude !== undefined && latitude !== null ? latitude : ''}
+            onChange={(e) => {
+              const val = parseFloat(e.target.value);
+              onLocationChange({
+                latitude: isNaN(val) ? '' : val,
+                longitude: longitude || 0
+              });
+            }}
+            placeholder="e.g. 31.6700"
+            className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          />
+        </div>
+        <div>
+          <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+            Longitude (-180 to 180)
+          </label>
+          <input
+            type="number"
+            step="any"
+            min="-180"
+            max="180"
+            value={longitude !== undefined && longitude !== null ? longitude : ''}
+            onChange={(e) => {
+              const val = parseFloat(e.target.value);
+              onLocationChange({
+                latitude: latitude || 0,
+                longitude: isNaN(val) ? '' : val
+              });
+            }}
+            placeholder="e.g. 77.0500"
+            className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+          />
+        </div>
+      </div>
+
       {latitude && longitude ? (
         <div className="flex items-center justify-between bg-emerald-50/70 border border-emerald-200 p-2.5 rounded-lg text-xs text-emerald-900">
           <span>
@@ -148,7 +194,7 @@ const LocationPicker = ({
         </div>
       ) : (
         <p className="text-xs text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
-          ⚠️ Please click on the map to set the emergency location coordinates.
+          ⚠️ Please click on the map or enter coordinates manually.
         </p>
       )}
     </div>

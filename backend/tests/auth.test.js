@@ -56,6 +56,19 @@ describe('Authentication & Authorization Endpoints', () => {
       expect(res.body.success).toBe(false);
       expect(res.body.errors).toBeDefined();
     });
+    it('should prevent citizen from elevating role to admin during registration', async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Hacker User',
+          email: 'hacker@example.com',
+          password: 'password123',
+          role: 'admin'
+        });
+
+      expect(res.statusCode).toBe(201);
+      expect(res.body.user.role).toBe('citizen'); // Forced to citizen
+    });
   });
 
   describe('POST /api/auth/login', () => {
@@ -92,6 +105,18 @@ describe('Authentication & Authorization Endpoints', () => {
       expect(res.statusCode).toBe(401);
       expect(res.body.success).toBe(false);
     });
+
+    it('should reject non-existent email', async () => {
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'nonexistent@example.com',
+          password: 'password123'
+        });
+
+      expect(res.statusCode).toBe(401);
+      expect(res.body.success).toBe(false);
+    });
   });
 
   describe('GET /api/auth/me', () => {
@@ -114,6 +139,14 @@ describe('Authentication & Authorization Endpoints', () => {
 
     it('should reject request without token with 401', async () => {
       const res = await request(app).get('/api/auth/me');
+      expect(res.statusCode).toBe(401);
+      expect(res.body.success).toBe(false);
+    });
+
+    it('should reject request with invalid or malformed token with 401', async () => {
+      const res = await request(app)
+        .get('/api/auth/me')
+        .set('Authorization', 'Bearer invalid_garbage_token_12345');
       expect(res.statusCode).toBe(401);
       expect(res.body.success).toBe(false);
     });

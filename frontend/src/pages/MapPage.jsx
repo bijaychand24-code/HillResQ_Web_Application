@@ -27,7 +27,7 @@ const MapPage = () => {
           limit: 50,
           ...(selectedType !== 'all' && { type: selectedType }),
           ...(selectedSeverity !== 'all' && { severity: selectedSeverity }),
-          ...(onlyActive && { status: 'in_progress' })
+          ...(onlyActive && { status: 'active' })
         };
         const res = await incidentService.getIncidents(params);
         if (res.success) {

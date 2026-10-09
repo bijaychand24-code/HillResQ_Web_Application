@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -34,7 +35,10 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(null, true); // Allow all in dev mode for smooth pair programming
+      if (process.env.NODE_ENV === 'production') {
+        return callback(new Error('Blocked by CORS policy'));
+      }
+      return callback(null, true); // Allow dev origins for smooth pair programming
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -71,6 +75,19 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/incidents', incidentRoutes);
 app.use('/api/upload', uploadRoutes);
+
+// In production, serve the compiled frontend SPA if dist exists
+const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get('*', (req, res, next) => {
+    // Forward unknown /api and /uploads requests to 404 handler
+    if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
 
 // Catch 404 and forward to error handler
 app.use(notFound);

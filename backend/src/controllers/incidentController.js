@@ -1,5 +1,13 @@
 const Incident = require('../models/Incident');
 const User = require('../models/User');
+const storageService = require('../services/storageService');
+
+const severityWeights = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1
+};
 
 /**
  * @desc    Create a new emergency incident report
@@ -24,6 +32,7 @@ const createIncident = async (req, res, next) => {
       description,
       type,
       severity,
+      severityWeight: severityWeights[severity] || 2,
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
       locationName,
@@ -61,7 +70,9 @@ const getIncidents = async (req, res, next) => {
 
     // Filter by status
     if (req.query.status) {
-      if (req.query.status !== 'all') {
+      if (req.query.status === 'active') {
+        query.status = { $nin: ['resolved', 'rejected'] };
+      } else if (req.query.status !== 'all') {
         query.status = req.query.status;
       }
     }
@@ -81,12 +92,24 @@ const getIncidents = async (req, res, next) => {
     }
 
     // Filter by my reports (for logged-in citizens)
-    if (req.query.mine === 'true' && req.user) {
+    if (req.query.mine === 'true') {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required to filter personal reports'
+        });
+      }
       query.reportedBy = req.user._id;
     }
 
     // Filter by assigned to me (for logged-in responders)
-    if (req.query.assignedToMe === 'true' && req.user) {
+    if (req.query.assignedToMe === 'true') {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required to filter assigned incidents'
+        });
+      }
       query.assignedTo = req.user._id;
     }
 
@@ -107,8 +130,8 @@ const getIncidents = async (req, res, next) => {
       if (req.query.sortBy === 'oldest') {
         sortOption = { createdAt: 1 };
       } else if (req.query.sortBy === 'severity') {
-        // High to low severity sorting priority
-        sortOption = { severity: -1, createdAt: -1 };
+        // High to low severity sorting priority using numeric weight
+        sortOption = { severityWeight: -1, createdAt: -1 };
       }
     }
 
@@ -201,8 +224,30 @@ const updateIncident = async (req, res, next) => {
 
     // ADMIN PERMISSIONS: full control
     if (userRole === 'admin') {
-      if (status !== undefined) allowedUpdates.status = status;
-      if (severity !== undefined) allowedUpdates.severity = severity;
+      const validStatuses = ['reported', 'verified', 'assigned', 'in_progress', 'resolved', 'rejected'];
+      const validSeverities = ['low', 'medium', 'high', 'critical'];
+
+      if (status !== undefined) {
+        if (!validStatuses.includes(status)) {
+          return res.status(400).json({
+            success: false,
+            message: `'${status}' is not a valid incident status`
+          });
+        }
+        allowedUpdates.status = status;
+      }
+
+      if (severity !== undefined) {
+        if (!validSeverities.includes(severity)) {
+          return res.status(400).json({
+            success: false,
+            message: `'${severity}' is not a valid severity level`
+          });
+        }
+        allowedUpdates.severity = severity;
+        allowedUpdates.severityWeight = severityWeights[severity] || 2;
+      }
+
       if (responseNotes !== undefined) allowedUpdates.responseNotes = responseNotes;
       if (title !== undefined) allowedUpdates.title = title;
       if (description !== undefined) allowedUpdates.description = description;
@@ -326,6 +371,10 @@ const deleteIncident = async (req, res, next) => {
         success: false,
         message: 'Incident not found'
       });
+    }
+
+    if (incident.imageUrl) {
+      await storageService.deleteFile(incident.imageUrl);
     }
 
     await Incident.findByIdAndDelete(req.params.id);

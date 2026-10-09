@@ -96,8 +96,8 @@ const Dashboard = () => {
         </div>
 
         {/* Real Admin Statistics Metric Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          <Card className="p-4 bg-slate-50">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+          <Card className="p-3.5 bg-slate-50">
             <div className="text-xs font-semibold text-slate-500">Total Incidents</div>
             <div className="text-2xl font-black text-slate-900 mt-1">
               {stats?.totalIncidents ?? 0}
@@ -105,7 +105,7 @@ const Dashboard = () => {
             <div className="text-[10px] text-slate-400 mt-0.5">Database records</div>
           </Card>
 
-          <Card className="p-4 bg-red-50/70 border-red-200">
+          <Card className="p-3.5 bg-red-50/70 border-red-200">
             <div className="text-xs font-semibold text-red-700 flex items-center gap-1">
               <AlertOctagon className="w-3.5 h-3.5" /> Critical
             </div>
@@ -115,7 +115,7 @@ const Dashboard = () => {
             <div className="text-[10px] text-red-600/80 mt-0.5">High threat</div>
           </Card>
 
-          <Card className="p-4 bg-amber-50/70 border-amber-200">
+          <Card className="p-3.5 bg-amber-50/70 border-amber-200">
             <div className="text-xs font-semibold text-amber-800 flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" /> Pending Verify
             </div>
@@ -125,7 +125,7 @@ const Dashboard = () => {
             <div className="text-[10px] text-amber-700 mt-0.5">Needs review</div>
           </Card>
 
-          <Card className="p-4 bg-blue-50/70 border-blue-200">
+          <Card className="p-3.5 bg-blue-50/70 border-blue-200">
             <div className="text-xs font-semibold text-blue-700 flex items-center gap-1">
               <UserCheck className="w-3.5 h-3.5" /> Assigned
             </div>
@@ -135,7 +135,7 @@ const Dashboard = () => {
             <div className="text-[10px] text-blue-600 mt-0.5">Teams mobilized</div>
           </Card>
 
-          <Card className="p-4 bg-yellow-50/70 border-yellow-200">
+          <Card className="p-3.5 bg-yellow-50/70 border-yellow-200">
             <div className="text-xs font-semibold text-yellow-800 flex items-center gap-1">
               <Activity className="w-3.5 h-3.5" /> In Progress
             </div>
@@ -145,7 +145,7 @@ const Dashboard = () => {
             <div className="text-[10px] text-yellow-700 mt-0.5">Active clearance</div>
           </Card>
 
-          <Card className="p-4 bg-emerald-50/70 border-emerald-200">
+          <Card className="p-3.5 bg-emerald-50/70 border-emerald-200">
             <div className="text-xs font-semibold text-emerald-800 flex items-center gap-1">
               <CheckCircle className="w-3.5 h-3.5" /> Resolved
             </div>
@@ -153,6 +153,16 @@ const Dashboard = () => {
               {stats?.resolvedIncidents ?? 0}
             </div>
             <div className="text-[10px] text-emerald-700 mt-0.5">Safety restored</div>
+          </Card>
+
+          <Card className="p-3.5 bg-purple-50/70 border-purple-200">
+            <div className="text-xs font-semibold text-purple-800 flex items-center gap-1">
+              <Users className="w-3.5 h-3.5" /> Total Users
+            </div>
+            <div className="text-2xl font-black text-purple-900 mt-1">
+              {stats?.totalUsers ?? 0}
+            </div>
+            <div className="text-[10px] text-purple-600 mt-0.5">Registered accounts</div>
           </Card>
         </div>
 

@@ -205,12 +205,12 @@ const IncidentDetails = () => {
   const isAssignedResponder =
     user &&
     incident.assignedTo &&
-    (incident.assignedTo._id === user._id || incident.assignedTo === user._id);
+    (String(incident.assignedTo._id || incident.assignedTo) === String(user._id));
 
   const isReporter =
     user &&
     incident.reportedBy &&
-    (incident.reportedBy._id === user._id || incident.reportedBy === user._id);
+    (String(incident.reportedBy._id || incident.reportedBy) === String(user._id));
 
   const currentStepIndex = statusSteps.indexOf(incident.status);
 
