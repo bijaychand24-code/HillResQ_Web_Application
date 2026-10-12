@@ -34,7 +34,7 @@ const validateRegister = [
     .withMessage('Email is required')
     .isEmail()
     .withMessage('Please provide a valid email address')
-    .normalizeEmail(),
+    .normalizeEmail({ gmail_remove_dots: false, gmail_remove_subaddress: false }),
   body('password')
     .notEmpty()
     .withMessage('Password is required')
@@ -53,7 +53,7 @@ const validateLogin = [
     .withMessage('Email is required')
     .isEmail()
     .withMessage('Please provide a valid email address')
-    .normalizeEmail(),
+    .normalizeEmail({ gmail_remove_dots: false, gmail_remove_subaddress: false }),
   body('password')
     .notEmpty()
     .withMessage('Password is required'),

@@ -14,10 +14,33 @@ const { apiLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
 
-// Security HTTP headers
+// Security HTTP headers with comprehensive CSP for Leaflet maps and external CDN assets
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' }
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        connectSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'https://unpkg.com',
+          'https://fonts.googleapis.com'
+        ],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://*.tile.openstreetmap.org',
+          'https://unpkg.com',
+          'https://raw.githubusercontent.com'
+        ],
+        objectSrc: ["'none'"]
+      }
+    }
   })
 );
 

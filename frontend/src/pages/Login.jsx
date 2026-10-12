@@ -82,7 +82,7 @@ const Login = () => {
             <Input
               label="Email Address"
               type="email"
-              placeholder="name@hillresq.org"
+              placeholder="yourname@gmail.com or role email"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}

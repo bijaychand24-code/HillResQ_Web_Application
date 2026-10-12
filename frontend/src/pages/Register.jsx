@@ -96,7 +96,7 @@ const Register = () => {
             <Input
               label="Email Address"
               type="email"
-              placeholder="citizen@example.com"
+              placeholder="yourname@gmail.com"
               icon={Mail}
               value={email}
               onChange={(e) => setEmail(e.target.value)}

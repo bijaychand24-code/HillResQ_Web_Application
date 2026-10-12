@@ -56,6 +56,57 @@ describe('Authentication & Authorization Endpoints', () => {
       expect(res.body.success).toBe(false);
       expect(res.body.errors).toBeDefined();
     });
+    it('should register and sign in with personal Gmail account preserving dots and case-insensitivity', async () => {
+      const gmailAddress = 'rahul.kumar.dev@gmail.com';
+      const reg = await request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Rahul Kumar',
+          email: gmailAddress,
+          password: 'securePassword123'
+        });
+
+      expect(reg.statusCode).toBe(201);
+      expect(reg.body.success).toBe(true);
+      expect(reg.body.user.email).toBe(gmailAddress); // Dots MUST be preserved!
+
+      // Log in with exact Gmail address
+      const loginExact = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'rahul.kumar.dev@gmail.com',
+          password: 'securePassword123'
+        });
+
+      expect(loginExact.statusCode).toBe(200);
+      expect(loginExact.body.token).toBeDefined();
+
+      // Log in with mixed-case Gmail address
+      const loginCase = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'Rahul.Kumar.Dev@Gmail.com',
+          password: 'securePassword123'
+        });
+
+      expect(loginCase.statusCode).toBe(200);
+      expect(loginCase.body.token).toBeDefined();
+    });
+
+    it('should register with Gmail address containing subaddress plus tag', async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Priya Test',
+          email: 'priya+mountainalerts@gmail.com',
+          password: 'password123'
+        });
+
+      expect(res.statusCode).toBe(201);
+      expect(res.body.success).toBe(true);
+      expect(res.body.user.email).toBe('priya+mountainalerts@gmail.com');
+    });
+
     it('should prevent citizen from elevating role to admin during registration', async () => {
       const res = await request(app)
         .post('/api/auth/register')

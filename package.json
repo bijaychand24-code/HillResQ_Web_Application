@@ -8,7 +8,11 @@
     "dev:frontend": "npm run dev --prefix frontend",
     "seed": "npm run seed --prefix backend",
     "test": "npm run test --prefix backend",
-    "build": "npm run build --prefix frontend"
+    "build": "npm run build --prefix frontend",
+    "docker:build": "docker build -t hillresq-app:latest .",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
   },
   "keywords": ["emergency", "disaster", "response", "mern", "incident", "mountain"],
   "author": "HillResQ Team",
