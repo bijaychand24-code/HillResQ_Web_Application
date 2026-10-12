@@ -1,0 +1,29 @@
+
+name: HillResQ CI/CD
+
+on: push
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        run: echo "Code Checkout Done"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Build
+        run: echo "Code Build Done"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Test
+        run: echo "Code Test Done"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Deploy
+        run: echo "Code Deploy Done"
